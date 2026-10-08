@@ -1,0 +1,460 @@
+# 🐧 Linux Fundamentals Part 3
+
+> **Platform:** TryHackMe
+> **Room:** Linux Fundamentals Part 3
+> **Level:** Beginner
+> **Focus:** Linux Text Editors, File Transfer, Cron Jobs, Package Management & Logs
+
+## 📌 Overview
+
+This write-up documents my learning and practical work from **Linux Fundamentals Part 3** on TryHackMe.
+
+The room covers several important Linux concepts that are useful for system administration, troubleshooting, and cybersecurity, including text editors, downloading and transferring files, cron jobs, package management, and Linux log files.
+
+---
+
+## 📝 1. Nano Text Editor
+
+`nano` is a simple terminal-based text editor that can be used to create and modify files.
+
+### Open or create a file
+
+```bash
+nano myfile
+```
+
+### Important Nano shortcuts
+
+| Shortcut   | Function             |
+| ---------- | -------------------- |
+| `Ctrl + X` | Exit Nano            |
+| `Ctrl + O` | Save/write the file  |
+| `Ctrl + W` | Search               |
+| `Ctrl + K` | Cut a line           |
+| `Ctrl + U` | Paste                |
+| `Ctrl + G` | Help                 |
+| `Ctrl + _` | Go to line           |
+| `Ctrl + C` | Show cursor position |
+
+### Example
+
+```bash
+nano notes.txt
+```
+
+I can then enter multiple lines of text and save the file using:
+
+```text
+Ctrl + O
+Enter
+Ctrl + X
+```
+
+---
+
+## ⚡ 2. VIM
+
+`VIM` is a more advanced terminal text editor.
+
+It is commonly used by Linux administrators and developers because of features such as:
+
+* Customizable keyboard shortcuts
+* Syntax highlighting
+* Efficient navigation and editing
+* Availability on many Linux systems
+
+To open a file with VIM:
+
+```bash
+vim filename
+```
+
+### Basic VIM commands
+
+```text
+i       Enter insert mode
+Esc     Leave insert mode
+:w      Save
+:q      Quit
+:wq     Save and quit
+:q!     Quit without saving
+```
+
+---
+
+## 🌐 3. Downloading Files with Wget
+
+`wget` can download files from a web server using HTTP or HTTPS.
+
+### Basic syntax
+
+```bash
+wget <URL>
+```
+
+### Example
+
+```bash
+wget https://example.com/file.txt
+```
+
+The downloaded file will normally be saved in the current directory.
+
+Useful for downloading:
+
+* Scripts
+* Text files
+* Programs
+* Other resources
+
+---
+
+## 🔐 4. Secure Copy Protocol (SCP)
+
+`scp` allows files to be securely transferred between computers using SSH.
+
+### Local → Remote
+
+```bash
+scp important.txt ubuntu@192.168.1.30:/home/ubuntu/transferred.txt
+```
+
+General syntax:
+
+```bash
+scp SOURCE USER@REMOTE_IP:DESTINATION
+```
+
+### Remote → Local
+
+```bash
+scp ubuntu@192.168.1.30:/home/ubuntu/documents.txt notes.txt
+```
+
+General syntax:
+
+```bash
+scp USER@REMOTE_IP:SOURCE DESTINATION
+```
+
+### Key concept
+
+SCP can be used to:
+
+* Upload files to a remote machine
+* Download files from a remote machine
+* Transfer files securely over SSH
+
+---
+
+## 🌍 5. Python HTTP Server
+
+Python includes a lightweight HTTP server that can be used to quickly serve files from a directory.
+
+### Start the server
+
+```bash
+python3 -m http.server
+```
+
+By default, it runs on:
+
+```text
+Port: 8000
+```
+
+You can then access the files from another machine using:
+
+```bash
+wget http://<IP>:8000/<filename>
+```
+
+### Example
+
+On the machine containing the files:
+
+```bash
+python3 -m http.server
+```
+
+From another machine:
+
+```bash
+wget http://10.49.138.37:8000/file
+```
+
+### Important
+
+The terminal running the Python server must remain active.
+
+You can open another terminal to download the file.
+
+---
+
+## ⏰ 6. Cron Jobs
+
+Cron is used to schedule tasks to run automatically on Linux.
+
+Cron jobs can be useful for:
+
+* Backups
+* Maintenance
+* Running scripts
+* Scheduled commands
+* System administration tasks
+
+### Edit the current user's crontab
+
+```bash
+crontab -e
+```
+
+A cron entry uses six fields:
+
+```text
+MIN HOUR DOM MON DOW CMD
+```
+
+| Field  | Meaning            |
+| ------ | ------------------ |
+| `MIN`  | Minute             |
+| `HOUR` | Hour               |
+| `DOM`  | Day of Month       |
+| `MON`  | Month              |
+| `DOW`  | Day of Week        |
+| `CMD`  | Command to execute |
+
+### Example
+
+```bash
+0 */12 * * * cp -R /home/user/Documents /var/backups/
+```
+
+This schedules the backup command every 12 hours.
+
+### Wildcard
+
+The `*` character means that the field can match any value.
+
+For example:
+
+```text
+* * * * *
+```
+
+means every minute.
+
+---
+
+## 📦 7. Linux Package Management
+
+Linux distributions use package managers to install, update, and remove software.
+
+On Debian-based systems such as Ubuntu and Kali Linux, `apt` is commonly used.
+
+### Update package information
+
+```bash
+sudo apt update
+```
+
+### Install a package
+
+```bash
+sudo apt install <package>
+```
+
+### Remove a package
+
+```bash
+sudo apt remove <package>
+```
+
+### Package repositories
+
+Linux uses repositories as sources from which software packages can be downloaded.
+
+Repository configuration can be found in locations such as:
+
+```bash
+/etc/apt/sources.list
+```
+
+and:
+
+```bash
+/etc/apt/sources.list.d/
+```
+
+---
+
+## 🔑 8. GPG Keys and Repositories
+
+Third-party repositories may use GPG keys to help verify the authenticity and integrity of software packages.
+
+The general process involves:
+
+1. Obtain the repository's signing key.
+2. Add the repository.
+3. Update the package information.
+4. Install the required software.
+
+Example repository update:
+
+```bash
+sudo apt update
+```
+
+> **Note:** TryHackMe's environment may not provide Internet access, so external repository setup may not work inside the room.
+
+---
+
+## 📋 9. Linux Log Files
+
+Linux stores many system and application logs under:
+
+```bash
+/var/log
+```
+
+These logs can be extremely useful for system administration and cybersecurity investigations.
+
+### View the log directory
+
+```bash
+ls /var/log
+```
+
+Common types of logs include:
+
+* System logs
+* Authentication logs
+* Web server logs
+* Firewall logs
+* Application logs
+
+### Web server logs
+
+Two particularly important web server logs are:
+
+```text
+access.log
+error.log
+```
+
+### Access logs
+
+Access logs can contain information about requests made to a web server, such as:
+
+* Client IP address
+* Requested resource
+* HTTP method
+* Response status
+* Timestamp
+
+### Error logs
+
+Error logs contain information about problems encountered by the web server or application.
+
+These logs can help administrators troubleshoot issues and security professionals investigate suspicious activity.
+
+---
+
+## 🛡️ Cybersecurity Relevance
+
+The concepts covered in this room are directly useful for cybersecurity.
+
+### File Transfer
+
+Tools such as:
+
+```bash
+wget
+scp
+python3 -m http.server
+```
+
+are frequently encountered during security labs and system administration.
+
+### Cron
+
+Understanding cron is important when investigating:
+
+* Scheduled tasks
+* Persistence mechanisms
+* Automated scripts
+* Privilege escalation opportunities
+
+### Logs
+
+Understanding `/var/log` is particularly important for:
+
+* Incident response
+* SOC analysis
+* Threat hunting
+* Investigating suspicious activity
+* Identifying authentication attempts
+
+---
+
+## 🧠 Key Commands Learned
+
+```bash
+nano filename
+vim filename
+
+wget <URL>
+
+scp file user@IP:/path/
+scp user@IP:/path/file destination
+
+python3 -m http.server
+
+crontab -e
+
+sudo apt update
+sudo apt install <package>
+sudo apt remove <package>
+
+ls /var/log
+```
+
+---
+
+## 🎯 What I Learned
+
+Through this room, I practiced:
+
+* Using terminal text editors
+* Creating and editing files with Nano
+* Basic VIM usage
+* Downloading files with `wget`
+* Transferring files with `scp`
+* Serving files using Python HTTP Server
+* Understanding Linux cron jobs
+* Managing packages with `apt`
+* Understanding repositories and GPG keys
+* Locating and analyzing Linux log files
+
+These are foundational Linux skills that I can apply to penetration testing, red team labs, SOC investigations, and general Linux administration.
+
+---
+
+## 📚 Resources
+
+* TryHackMe: Linux Fundamentals Part 3
+* Linux `man` pages
+* Nano
+* VIM
+* Wget
+* SCP
+* Cron
+* APT
+
+---
+
+## ⚠️ Disclaimer
+
+This repository contains my personal learning notes and practical write-up from a TryHackMe training room.
+
+All testing was performed in authorized lab environments for educational purposes.
